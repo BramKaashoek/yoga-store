@@ -30,10 +30,37 @@ end
 
 #select department, create set of active items and print products
 def select_department
-  departments = products.keys
-  puts "The available departments are #{departments}"
+  puts "The available departments are #{@departments.join(", ")}!\nPlease enter your selection"
+  department = gets.chomp.downcase
+  show_products(department)
 end
 
+#show available products in this department
+def show_products(department)
+  department="mats"
+  department_products = @products.select {|k, v| k == department.to_sym}.values.flatten
+  department_products.each do |product|
+     puts "You can buy the #{product[:name]} for #{product[:price]}. Item code is #{product[:reference_number]}."
+   end
+   buy_or_return(department_products)
+end
+
+def buy_or_return(department_products)
+  puts "Would you like to buy an item? (Y/N)\n If you do not buy an item, you will be returned to the department selection screen."
+  buy = gets.chomp.upcase
+  if buy == "Y"
+    buy_item(department_products)
+  elsif buy == "N"
+    puts "\e[H\e[2J"
+    select_department
+  else
+    buy_or_return(department_products)
+  end
+end
+
+def buy_item(department_products)
+
+end
 # buy product [add to cart] or return to select department
 #when buying puts cart and total price
 # when buying ask if you want to continue, continue to select depart, stop to checkout
